@@ -30,18 +30,28 @@ namespace Kenty
 
         [Header("メッシュの見た目設定")]
         [SerializeField]
-        [Tooltip("メッシュの表示色")]
-        private Color _meshColor = new(0f, 0.8f, 1f, 0.3f);
+        [Tooltip("メッシュに適用するマテリアル（未設定の場合はデフォルトマテリアルを使用）")]
+        private Material _meshMaterial;
 
         [Header("イベント")]
         [SerializeField]
         [Tooltip("スキャン状態が変化したときに発火するイベント")]
         private UnityEvent<ScanState> _onScanStateChanged = new();
 
+        [SerializeField]
+        [Tooltip("ステータスメッセージが更新されたときに発火するイベント")]
+        private UnityEvent<string> _onStatusChanged = new();
+
         /// <summary>
         /// スキャン状態が変化したときに発火するイベント
         /// </summary>
         public UnityEvent<ScanState> OnScanStateChanged => _onScanStateChanged;
+
+        /// <summary>
+        /// ステータスメッセージが更新されたときに発火するイベント。
+        /// Inspector で TextMeshProUGUI.set_text に直接紐付けて使う。
+        /// </summary>
+        public UnityEvent<string> OnStatusChanged => _onStatusChanged;
 
         /// <summary>
         /// 現在のスキャン状態
@@ -51,22 +61,9 @@ namespace Kenty
         // 生成したメッシュ GameObject を管理するリスト
         private readonly List<GameObject> _meshObjects = new();
 
-        // メッシュ表示用のマテリアル（ランタイム生成）
-        private Material _meshMaterial;
-
-        private void Awake()
-        {
-            _meshMaterial = CreateMeshMaterial();
-        }
-
         private void OnDestroy()
         {
             ClearMeshObjects();
-
-            if (_meshMaterial is not null)
-            {
-                Destroy(_meshMaterial);
-            }
         }
 
         /// <summary>
@@ -244,30 +241,6 @@ namespace Kenty
         }
 
         /// <summary>
-        /// 半透明のメッシュ表示用マテリアルをランタイムで生成する。
-        /// Standard シェーダーの Transparent モードを使用する。
-        /// </summary>
-        private Material CreateMeshMaterial()
-        {
-            var material = new Material(Shader.Find("Standard"))
-            {
-                color = _meshColor
-            };
-
-            // Transparent レンダリングモードに設定する
-            material.SetFloat("_Mode", 3f);
-            material.SetInt("_SrcBlend", (int)BlendMode.SrcAlpha);
-            material.SetInt("_DstBlend", (int)BlendMode.OneMinusSrcAlpha);
-            material.SetInt("_ZWrite", 0);
-            material.DisableKeyword("_ALPHATEST_ON");
-            material.EnableKeyword("_ALPHABLEND_ON");
-            material.DisableKeyword("_ALPHAPREMULTIPLY_ON");
-            material.renderQueue = (int)RenderQueue.Transparent;
-
-            return material;
-        }
-
-        /// <summary>
         /// 生成済みのメッシュ GameObject をすべて破棄する。
         /// </summary>
         private void ClearMeshObjects()
@@ -290,6 +263,17 @@ namespace Kenty
         {
             CurrentState = state;
             _onScanStateChanged?.Invoke(state);
+
+            // 状態に対応するステータス文字列を通知する
+            string message = state switch
+            {
+                ScanState.Idle => "Scan Start",
+                ScanState.Scanning => "Scanning ...",
+                ScanState.Completed => "Scan Complete",
+                ScanState.Failed => "Scan Failed",
+                _ => ""
+            };
+            _onStatusChanged?.Invoke(message);
         }
     }
 }

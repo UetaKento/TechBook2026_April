@@ -33,6 +33,10 @@ namespace Kenty
         [Tooltip("メッシュに適用するマテリアル（未設定の場合はデフォルトマテリアルを使用）")]
         private Material _meshMaterial;
 
+        [SerializeField]
+        [Tooltip("生成するメッシュに設定するレイヤー")]
+        private int _meshLayer;
+
         [Header("イベント")]
         [SerializeField]
         [Tooltip("スキャン状態が変化したときに発火するイベント")]
@@ -215,6 +219,7 @@ namespace Kenty
             // GameObject を構築する
             var meshObject = new GameObject("GlobalMesh");
             meshObject.transform.SetParent(transform);
+            meshObject.layer = _meshLayer;
 
             // アンカーの位置・回転をトラッキング空間から適用する
             if (locatable.TryGetSceneAnchorPose(out OVRLocatable.TrackingSpacePose trackingPose))
@@ -254,6 +259,20 @@ namespace Kenty
             }
 
             _meshObjects.Clear();
+        }
+
+        /// <summary>
+        /// メッシュの表示・非表示を切り替える。
+        /// </summary>
+        public void SetMeshVisible(bool visible)
+        {
+            foreach (GameObject meshObject in _meshObjects)
+            {
+                if (meshObject is not null)
+                {
+                    meshObject.SetActive(visible);
+                }
+            }
         }
 
         /// <summary>

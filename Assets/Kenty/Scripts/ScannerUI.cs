@@ -70,22 +70,22 @@ namespace Kenty
             switch (state)
             {
                 case GlobalMeshScanner.ScanState.Idle:
-                    _statusText.text = "スキャン開始";
+                    _statusText.text = "Scan Start";
                     _scanButton.interactable = true;
                     break;
 
                 case GlobalMeshScanner.ScanState.Scanning:
-                    _statusText.text = "スキャン中...";
+                    _statusText.text = "Scaning ...";
                     _scanButton.interactable = false;
                     break;
 
                 case GlobalMeshScanner.ScanState.Completed:
-                    _statusText.text = "スキャン完了";
+                    _statusText.text = "Scan Complete";
                     _scanButton.interactable = true;
                     break;
 
                 case GlobalMeshScanner.ScanState.Failed:
-                    _statusText.text = "スキャン失敗";
+                    _statusText.text = "Scan Failed";
                     _scanButton.interactable = true;
                     break;
             }

@@ -127,6 +127,12 @@ namespace Kenty
         /// </summary>
         public async void SaveAnchor()
         {
+            // 配置モードが ON の場合は OFF にする
+            if (IsPlacementModeActive)
+            {
+                TogglePlacementMode();
+            }
+
             if (_currentAnchor is null)
             {
                 SetStatus("No Anchor to Save");
@@ -159,6 +165,12 @@ namespace Kenty
         /// </summary>
         public async void LoadSavedAnchor()
         {
+            // 配置モードが ON の場合は OFF にする
+            if (IsPlacementModeActive)
+            {
+                TogglePlacementMode();
+            }
+
             // PlayerPrefs から保存済みの UUID を取得する
             string uuidString = PlayerPrefs.GetString(AnchorUuidKey, "");
             if (string.IsNullOrEmpty(uuidString) || !Guid.TryParse(uuidString, out Guid uuid))

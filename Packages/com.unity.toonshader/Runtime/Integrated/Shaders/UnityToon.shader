@@ -246,6 +246,11 @@ Shader "Toon" {
         [HideInInspector] emissive("to avoid srp batcher error", Color)= (0, 0, 0, 1) //
 	////////////////// Avoid HDRP srp batcher error ///////////////////////////////
 
+	//////////////////////////////////////////////////////////////////////////////
+	////////////////// Meta Quest Depth Occlusion ////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////////
+        [Header(Depth Occlusion)]
+        _EnvironmentDepthBias ("Environment Depth Bias", Float) = 0.06
 
 	//////////////////////////////////////////////////////////////////////////////
 	////////////////// Beginning of HDRP material default values. ////////////////
@@ -1544,6 +1549,11 @@ Shader "Toon" {
 
             //
             #pragma shader_feature_local UTS_USE_RAYTRACING_SHADOW
+
+            // Meta Quest デプスオクルージョン用キーワード
+            #pragma multi_compile _ HARD_OCCLUSION SOFT_OCCLUSION
+            #include "Packages/com.meta.xr.sdk.core/Shaders/EnvironmentDepth/BiRP/EnvironmentOcclusionBiRP.cginc"
+
 #if defined(_SHADINGGRADEMAP)
 
 #include "../../Legacy/Shaders/UCTS_ShadingGradeMap.cginc"
@@ -1589,6 +1599,11 @@ Shader "Toon" {
             #pragma multi_compile _OUTLINE_NML _OUTLINE_POS
             // Unity Toon Shader 0.5.0
             #pragma multi_compile _ _DISABLE_OUTLINE
+
+            // Meta Quest デプスオクルージョン用キーワード
+            #pragma multi_compile _ HARD_OCCLUSION SOFT_OCCLUSION
+            #include "Packages/com.meta.xr.sdk.core/Shaders/EnvironmentDepth/BiRP/EnvironmentOcclusionBiRP.cginc"
+
             //The outline process goes to UTS_Outline.cginc.
             #include "../../Legacy/Shaders/UCTS_Outline.cginc"
             ENDCG
@@ -1628,6 +1643,10 @@ Shader "Toon" {
 
             #pragma multi_compile _IS_PASS_FWDDELTA
             #pragma shader_feature_local UTS_USE_RAYTRACING_SHADOW
+
+            // Meta Quest デプスオクルージョン用キーワード
+            #pragma multi_compile _ HARD_OCCLUSION SOFT_OCCLUSION
+            #include "Packages/com.meta.xr.sdk.core/Shaders/EnvironmentDepth/BiRP/EnvironmentOcclusionBiRP.cginc"
 
 #if defined(_SHADINGGRADEMAP)
 

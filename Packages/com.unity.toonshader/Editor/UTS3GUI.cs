@@ -316,6 +316,7 @@ namespace UnityEditor.Rendering.Toon
             SceneLight = 1 << 12,
             EnvironmentalLightEffectiveness = 1 << 13,
             MetaverseSettings = 1 << 14,
+            DepthOcclusion = 1 << 15,
         }
 
         // variables which must be gotten from shader at the beggning of GUI
@@ -597,6 +598,8 @@ namespace UnityEditor.Rendering.Toon
             public static readonly GUIContent lightEffectivenessFoldout = EditorGUIUtility.TrTextContent("Scene Light Effectiveness Settings", "Scene light effectiveness to each parameter.");
 
             public static readonly GUIContent metaverseSettingsFoldout = EditorGUIUtility.TrTextContent("Metaverse Settings (Experimental)", "Default directional light when no directional lights are in the scene.");
+            public static readonly GUIContent depthOcclusionFoldout = EditorGUIUtility.TrTextContent("Depth Occlusion Settings", "Meta Quest depth-based occlusion settings.");
+            public static readonly GUIContent depthBiasText = new GUIContent("Environment Depth Bias", "Bias value to prevent z-fighting at occlusion boundaries. Increase if flickering occurs.");
             public static readonly GUIContent shadowControlMapFoldout = EditorGUIUtility.TrTextContent("Shadow Control Maps", "Shadow control map settings. Such as positions and highlight filtering.");
             public static readonly GUIContent pointLightFoldout = EditorGUIUtility.TrTextContent("Point Light Settings", "Point light settings. Such as filtering and step offset.");
 
@@ -908,6 +911,7 @@ namespace UnityEditor.Rendering.Toon
             // originally these were in simple UI
             m_MaterialScopeList.RegisterHeaderScope(Styles.lightEffectivenessFoldout, Expandable.SceneLight, GUI_LightColorEffectiveness, (uint)UTS_Mode.ThreeColorToon, (uint)UTS_TransparentMode.Off, isTessellation: 0);
             m_MaterialScopeList.RegisterHeaderScope(Styles.metaverseSettingsFoldout, Expandable.MetaverseSettings, GUI_MetaverseSettings, (uint)UTS_Mode.ThreeColorToon, (uint)UTS_TransparentMode.Off, isTessellation: 0);
+            m_MaterialScopeList.RegisterHeaderScope(Styles.depthOcclusionFoldout, Expandable.DepthOcclusion, GUI_DepthOcclusion, (uint)UTS_Mode.ThreeColorToon, (uint)UTS_TransparentMode.Off, isTessellation: 0);
         }
 
         void UTS3DrawHeaders(MaterialEditor materialEditor, Material material)
@@ -2362,6 +2366,19 @@ namespace UnityEditor.Rendering.Toon
             }
             EditorGUI.EndDisabledGroup();
 
+        }
+
+        void GUI_DepthOcclusion(Material material)
+        {
+            float bias = material.GetFloat("_EnvironmentDepthBias");
+            EditorGUI.BeginChangeCheck();
+            bias = EditorGUILayout.FloatField(Styles.depthBiasText, bias);
+            if (EditorGUI.EndChangeCheck())
+            {
+                m_MaterialEditor.RegisterPropertyChangeUndo(Styles.depthBiasText.text);
+                material.SetFloat("_EnvironmentDepthBias", bias);
+            }
+            EditorGUILayout.Space();
         }
 
         public void DoPopup(GUIContent label, MaterialProperty property, string[] options)

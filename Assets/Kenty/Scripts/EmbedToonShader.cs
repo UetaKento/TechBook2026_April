@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using UnityEditor;
 using UnityEditor.PackageManager;
 using UnityEngine;
@@ -31,3 +32,4 @@ namespace Unity.Editor.Example
         }
     }
 }
+#endif

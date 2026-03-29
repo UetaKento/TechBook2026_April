@@ -21,6 +21,8 @@
                 float3 normalDir : TEXCOORD1;
                 float3 tangentDir : TEXCOORD2;
                 float3 bitangentDir : TEXCOORD3;
+                // Meta Quest デプスオクルージョン用ワールド座標
+                META_DEPTH_VERTEX_OUTPUT(4)
                 UNITY_VERTEX_INPUT_INSTANCE_ID
                 UNITY_VERTEX_OUTPUT_STEREO
             };
@@ -64,6 +66,8 @@
 #endif
                 //v.2.0.7.5
                 o.pos.z = o.pos.z + _Offset_Z * _ClipCameraPos.z;
+                // Meta Quest デプスオクルージョン用ワールド座標を初期化
+                META_DEPTH_INITIALIZE_VERTEX_OUTPUT(o, v.vertex);
                 return o;
             }
             float4 frag(VertexOutput i) : SV_Target{
@@ -93,7 +97,9 @@
 //v.2.0.7.5
 #ifdef _IS_OUTLINE_CLIPPING_NO
                 float3 Set_Outline_Color = lerp(_Is_BlendBaseColor_var, _OutlineTex_var.rgb*_Outline_Color.rgb*lightColor, _Is_OutlineTex );
-                return float4(Set_Outline_Color,1.0);
+                float4 outlineResult = float4(Set_Outline_Color, 1.0);
+                META_DEPTH_OCCLUDE_OUTPUT_PREMULTIPLY_WORLDPOS(i.posWorld, outlineResult, _EnvironmentDepthBias)
+                return outlineResult;
 #elif _IS_OUTLINE_CLIPPING_YES
                 float4 _ClippingMask_var = tex2D(_ClippingMask,TRANSFORM_TEX(Set_UV0, _ClippingMask));
                 float Set_MainTexAlpha = _MainTex_var.a;
@@ -102,6 +108,7 @@
                 float Set_Clipping = saturate((_Inverse_Clipping_var+_Clipping_Level));
                 clip(Set_Clipping - 0.5);
                 float4 Set_Outline_Color = lerp( float4(_Is_BlendBaseColor_var,Set_Clipping), float4((_OutlineTex_var.rgb*_Outline_Color.rgb*lightColor),Set_Clipping), _Is_OutlineTex );
+                META_DEPTH_OCCLUDE_OUTPUT_PREMULTIPLY_WORLDPOS(i.posWorld, Set_Outline_Color, _EnvironmentDepthBias)
                 return Set_Outline_Color;
 #endif
             }

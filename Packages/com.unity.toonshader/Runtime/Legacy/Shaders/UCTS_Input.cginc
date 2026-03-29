@@ -164,8 +164,11 @@ fixed _Is_BakedNormal;
 
 float _ZOverDrawMode;
 
+// Meta Quest Depth Occlusion
+float _EnvironmentDepthBias;
+
 //
-// 
+//
 //
 float4 _BaseMap_ST;
 half4 _BaseColor;

@@ -1586,6 +1586,11 @@ Shader "Toon(Tessellation)" {
             #pragma multi_compile _OUTLINE_NML _OUTLINE_POS
             // Unity Toon Shader 0.5.0
             #pragma multi_compile _ _DISABLE_OUTLINE
+
+            // Meta Quest デプスオクルージョン用キーワード
+            #pragma multi_compile _ HARD_OCCLUSION SOFT_OCCLUSION
+            #include "Packages/com.meta.xr.sdk.core/Shaders/EnvironmentDepth/BiRP/EnvironmentOcclusionBiRP.cginc"
+
             //The outline process goes to UTS_Outline.cginc.
             #include "../../Legacy/Shaders/UCTS_Outline.cginc"
             ENDCG
@@ -1639,6 +1644,11 @@ Shader "Toon(Tessellation)" {
 
             //
             #pragma shader_feature_local UTS_USE_RAYTRACING_SHADOW
+
+            // Meta Quest デプスオクルージョン用キーワード
+            #pragma multi_compile _ HARD_OCCLUSION SOFT_OCCLUSION
+            #include "Packages/com.meta.xr.sdk.core/Shaders/EnvironmentDepth/BiRP/EnvironmentOcclusionBiRP.cginc"
+
 #if defined(_SHADINGGRADEMAP)
 
 #include "../../Legacy/Shaders/UCTS_ShadingGradeMap.cginc"
@@ -1690,6 +1700,11 @@ Shader "Toon(Tessellation)" {
             #pragma multi_compile _OUTLINE_NML _OUTLINE_POS
             // Unity Toon Shader 0.5.0
             #pragma multi_compile _ _DISABLE_OUTLINE
+
+            // Meta Quest デプスオクルージョン用キーワード
+            #pragma multi_compile _ HARD_OCCLUSION SOFT_OCCLUSION
+            #include "Packages/com.meta.xr.sdk.core/Shaders/EnvironmentDepth/BiRP/EnvironmentOcclusionBiRP.cginc"
+
             //The outline process goes to UTS_Outline.cginc.
             #include "../../Legacy/Shaders/UCTS_Outline_Tess.cginc"
             ENDCG
@@ -1735,6 +1750,10 @@ Shader "Toon(Tessellation)" {
 
             #pragma multi_compile _IS_PASS_FWDDELTA
             #pragma shader_feature_local UTS_USE_RAYTRACING_SHADOW
+
+            // Meta Quest デプスオクルージョン用キーワード
+            #pragma multi_compile _ HARD_OCCLUSION SOFT_OCCLUSION
+            #include "Packages/com.meta.xr.sdk.core/Shaders/EnvironmentDepth/BiRP/EnvironmentOcclusionBiRP.cginc"
 
 #if defined(_SHADINGGRADEMAP)
 

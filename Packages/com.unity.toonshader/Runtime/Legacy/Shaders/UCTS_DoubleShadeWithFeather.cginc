@@ -360,5 +360,8 @@ struct VertexOutput {
 	#endif
 #endif
                 UNITY_APPLY_FOG(i.fogCoord, finalRGBA);
+                // Meta Quest デプスオクルージョン:
+                // 環境深度と比較し、現実世界のオブジェクトの背後にあるピクセルを透過させる
+                META_DEPTH_OCCLUDE_OUTPUT_PREMULTIPLY_WORLDPOS(i.posWorld.xyz, finalRGBA, _EnvironmentDepthBias)
                 return finalRGBA;
             }

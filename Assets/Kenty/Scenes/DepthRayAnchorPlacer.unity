@@ -1910,8 +1910,8 @@ MonoBehaviour:
   _rayColor: {r: 1, g: 1, b: 1, a: 1}
   _controller: 1
   _placementButton: 3
-  _anchorPrefab: {fileID: 1252723662732421373, guid: bf6abe372a54fac479235d42f2b193dc, type: 3}
-  _previewPrefab: {fileID: 1252723662732421373, guid: bf6abe372a54fac479235d42f2b193dc, type: 3}
+  _anchorPrefab: {fileID: 0}
+  _previewPrefab: {fileID: 0}
   _onPlacementModeChanged:
     m_PersistentCalls:
       m_Calls: []

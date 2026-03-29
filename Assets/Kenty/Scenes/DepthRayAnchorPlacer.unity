@@ -1884,6 +1884,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1467389186}
   - component: {fileID: 1467389185}
+  - component: {fileID: 1467389187}
   - component: {fileID: 1467389184}
   m_Layer: 0
   m_Name: DepthRayAnchorPlacer
@@ -1944,6 +1945,23 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1467389187
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1467389183}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71a155ece80369d4e99bdaf5e59169b5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _occlusionShadersMode: 2
+  _removeHands: 0
+  CustomTrackingSpace: {fileID: 0}
+  <MaskMeshFilters>k__BackingField: []
+  _cameraRig: {fileID: 217403802}
 --- !u!1 &1610137409
 GameObject:
   m_ObjectHideFlags: 0

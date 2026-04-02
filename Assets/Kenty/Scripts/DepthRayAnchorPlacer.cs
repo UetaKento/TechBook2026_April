@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using Meta.XR;
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace Kenty
 {
@@ -14,9 +13,9 @@ namespace Kenty
     /// </summary>
     public class DepthRayAnchorPlacer : MonoBehaviour
     {
+        // [簡略化のためコメントアウト]
         private const string AnchorUuidKey = "DepthRayAnchorUuid";
 
-        [Header("Ray 設定")]
         [SerializeField]
         [Tooltip("Ray の始点となる Transform（コントローラーの Transform を指定）")]
         private Transform _rayOrigin;
@@ -29,6 +28,7 @@ namespace Kenty
         [Tooltip("Ray の表示色")]
         private Color _rayColor = Color.white;
 
+        // [簡略化のためコメントアウト]
         [Header("入力設定")]
         [SerializeField]
         [Tooltip("アンカー設置に使用するコントローラー")]
@@ -43,33 +43,10 @@ namespace Kenty
         [Tooltip("アンカー位置に生成するキャラクタープレハブ")]
         private GameObject _anchorPrefab;
 
-        [Header("プレビュー設定")]
         [SerializeField]
         [Tooltip("レイのヒットポイントに表示するプレビュー用プレハブ")]
         private GameObject _previewPrefab;
 
-        [Header("イベント")]
-        [SerializeField]
-        [Tooltip("配置モードが切り替わったときに発火するイベント")]
-        private UnityEvent<bool> _onPlacementModeChanged = new();
-
-        [SerializeField]
-        [Tooltip("ステータスメッセージが更新されたときに発火するイベント")]
-        private UnityEvent<string> _onStatusChanged = new();
-
-        /// <summary>
-        /// 配置モードが切り替わったときに発火するイベント
-        /// </summary>
-        public UnityEvent<bool> OnPlacementModeChanged => _onPlacementModeChanged;
-
-        /// <summary>
-        /// ステータスメッセージが更新されたときに発火するイベント
-        /// </summary>
-        public UnityEvent<string> OnStatusChanged => _onStatusChanged;
-
-        /// <summary>
-        /// 配置モードが有効かどうか
-        /// </summary>
         public bool IsPlacementModeActive { get; private set; }
 
         // EnvironmentRaycastManager への参照（シーンから取得）
@@ -78,6 +55,7 @@ namespace Kenty
         // プレビュー表示用のインスタンス（事前生成して表示/非表示を切り替える）
         private GameObject _previewInstance;
 
+        // [簡略化のためコメントアウト]
         // 現在シーンに存在するアンカーの GameObject
         private GameObject _currentAnchorObject;
 
@@ -113,7 +91,8 @@ namespace Kenty
 
         private void OnDestroy()
         {
-            DestroyCurrentAnchor();
+            // [簡略化のためコメントアウト]
+            // DestroyCurrentAnchor();
 
             if (_previewInstance is not null)
             {
@@ -146,12 +125,10 @@ namespace Kenty
                 _previewInstance.SetActive(false);
             }
 
-            _onPlacementModeChanged?.Invoke(IsPlacementModeActive);
-
-            string message = IsPlacementModeActive ? "Placement: ON" : "Placement: OFF";
-            SetStatus(message);
         }
 
+        // [簡略化のためコメントアウト]
+        /*
         /// <summary>
         /// 現在のアンカーを永続ストレージに保存する。
         /// Button.onClick から呼ぶことを想定。
@@ -166,17 +143,13 @@ namespace Kenty
 
             if (_currentAnchor is null)
             {
-                SetStatus("No Anchor to Save");
                 return;
             }
-
-            SetStatus("Saving ...");
 
             // アンカーをデバイスに永続化する
             var result = await _currentAnchor.SaveAnchorAsync();
             if (!result.Success)
             {
-                SetStatus("Save Failed");
                 Debug.LogWarning("[DepthRayAnchorPlacer] アンカーの保存に失敗しました。");
                 return;
             }
@@ -186,7 +159,6 @@ namespace Kenty
             PlayerPrefs.SetString(AnchorUuidKey, uuid);
             PlayerPrefs.Save();
 
-            SetStatus("Anchor Saved");
             Debug.Log($"[DepthRayAnchorPlacer] アンカーを保存しました。UUID: {uuid}");
         }
 
@@ -206,11 +178,8 @@ namespace Kenty
             string uuidString = PlayerPrefs.GetString(AnchorUuidKey, "");
             if (string.IsNullOrEmpty(uuidString) || !Guid.TryParse(uuidString, out Guid uuid))
             {
-                SetStatus("No Saved Anchor");
                 return;
             }
-
-            SetStatus("Loading ...");
             DestroyCurrentAnchor();
 
             // 保存済みアンカーをデバイスから読み込む
@@ -220,7 +189,6 @@ namespace Kenty
 
             if (!loadResult.Success || unboundAnchors.Count == 0)
             {
-                SetStatus("Load Failed");
                 Debug.LogWarning("[DepthRayAnchorPlacer] アンカーの読み込みに失敗しました。");
                 return;
             }
@@ -233,7 +201,6 @@ namespace Kenty
                 bool localized = await unboundAnchor.LocalizeAsync();
                 if (!localized)
                 {
-                    SetStatus("Localize Failed");
                     Debug.LogWarning("[DepthRayAnchorPlacer] アンカーのローカライズに失敗しました。");
                     return;
                 }
@@ -254,9 +221,9 @@ namespace Kenty
             _currentAnchor = anchor;
             _currentAnimator = anchorObject.GetComponentInChildren<Animator>();
 
-            SetStatus("Anchor Loaded");
             Debug.Log($"[DepthRayAnchorPlacer] アンカーを復元しました。UUID: {uuid}");
         }
+        */
 
         /// <summary>
         /// 配置モード中の毎フレーム処理。
@@ -306,13 +273,18 @@ namespace Kenty
                 }
             }
 
+            // [簡略化のためコメントアウト]
+            /*
             // 指定されたコントローラーのボタンが押された瞬間にアンカーを設置する
             if (isHit && OVRInput.GetDown(_placementButton, _controller))
             {
                 PlaceAnchor(hit.point);
             }
+            */
         }
 
+        // [簡略化のためコメントアウト]
+        /*
         /// <summary>
         /// 指定位置にアンカーを設置する。
         /// キャラクターはカメラ（ユーザー）の方を向いた状態で生成される。
@@ -351,11 +323,9 @@ namespace Kenty
             if (!localized)
             {
                 Debug.LogWarning("[DepthRayAnchorPlacer] アンカーのローカライズに失敗しました。");
-                SetStatus("Anchor Failed");
                 return;
             }
 
-            SetStatus("Anchor Placed");
             Debug.Log($"[DepthRayAnchorPlacer] アンカーを設置しました。位置: {position}");
         }
 
@@ -384,31 +354,6 @@ namespace Kenty
         }
 
         /// <summary>
-        /// Ray 表示用の LineRenderer をランタイムで生成する。
-        /// </summary>
-        private LineRenderer CreateLineRenderer()
-        {
-            var lr = gameObject.AddComponent<LineRenderer>();
-            lr.positionCount = 2;
-            lr.startWidth = 0.005f;
-            lr.endWidth = 0.005f;
-            lr.material = new Material(Shader.Find("Unlit/Color"))
-            {
-                color = _rayColor
-            };
-            lr.useWorldSpace = true;
-            return lr;
-        }
-
-        /// <summary>
-        /// LineRenderer の表示・非表示を切り替える。
-        /// </summary>
-        private void SetLineRendererVisible(bool visible)
-        {
-            _lineRenderer.enabled = visible;
-        }
-
-        /// <summary>
         /// キャラクターのアニメーションを次に送る。
         /// Button.onClick から呼ぶことを想定。
         /// </summary>
@@ -431,13 +376,31 @@ namespace Kenty
                 _currentAnimator.SetTrigger("Back");
             }
         }
+        */
 
         /// <summary>
-        /// ステータスメッセージを更新し、イベントを発火する。
+        /// Ray 表示用の LineRenderer をランタイムで生成する。
         /// </summary>
-        private void SetStatus(string message)
+        private LineRenderer CreateLineRenderer()
         {
-            _onStatusChanged?.Invoke(message);
+            var lr = gameObject.AddComponent<LineRenderer>();
+            lr.positionCount = 2;
+            lr.startWidth = 0.005f;
+            lr.endWidth = 0.005f;
+            lr.material = new Material(Shader.Find("Unlit/Color"))
+            {
+                color = _rayColor
+            };
+            lr.useWorldSpace = true;
+            return lr;
+        }
+
+        /// <summary>
+        /// LineRenderer の表示・非表示を切り替える。
+        /// </summary>
+        private void SetLineRendererVisible(bool visible)
+        {
+            _lineRenderer.enabled = visible;
         }
     }
 }
